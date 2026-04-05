@@ -1,15 +1,21 @@
 CyberSpace Browser Layer
-A Brave extension that turns your browser into a focused, terminal-style workspace with built-in tools for daily use.
-Overview
-CyberSpace replaces passive browsing with an active interface.
-You get:
-A unified dashboard
-Functional navigation
-Persistent productivity tools
-A retro terminal-inspired UI
-Everything lives inside your browser.
-Architecture
 
+CyberSpace is a Brave extension that transforms your browser into a focused, terminal-style workspace. It replaces passive browsing with an interactive system built for productivity.
+
+What It Does
+
+CyberSpace turns your browser into a control center.
+
+You work inside a single interface. No tab chaos. No context switching.
+
+You get:
+
+A unified dashboard
+Built-in productivity tools
+Persistent state across sessions
+A fast, keyboard-friendly workflow
+A terminal-inspired UI
+Architecture
 +-----------------------+
 |   Brave Browser       |
 +----------+------------+
@@ -17,7 +23,7 @@ Architecture
            v
 +-----------------------+
 |   Extension Layer     |
-|  (UI + Logic Engine)  |
+|  UI + Logic Engine    |
 +----------+------------+
            |
            v
@@ -31,47 +37,50 @@ Architecture
 +-----------------------+
 Core Features
 Search Engine Override
-Type anything
-View results inside your interface
-No context switching
+Type queries directly into the interface
+Results render inside the app
+No tab switching
 Navigation System
-Sidebar-driven workflow
+Sidebar-based layout
 Instant panel switching
-No page reloads
+Zero reload workflow
 To-Do Manager
 Add, complete, delete tasks
-Persistent storage
-Survives restarts
+Stored using local storage
+Data persists after restart
 Journal
-Write and auto-save notes
-Daily logging system
+Write notes with auto-save
+Daily logging support
 AI Hub
-Quick access to:
+
+Access multiple AI tools in one place:
+
 ChatGPT
 Claude
 Gemini
-Add custom AI tools
+Custom integrations
 System Monitor
 Active tab count
-Memory usage (approx)
+Approx memory usage
 Live date and time
 Quick Access
 Frequently visited sites
-Chrome top sites integration
+Integrated with Chrome top sites
 UI System
-
 [ Sidebar ]  |  [ Main Panel                    ]
              |  -------------------------------
              |  Dynamic Content Rendering Area
              |  (Search, Tasks, Journal, etc.)
 Full-width layout
-No wasted space
-Theme-driven design
+No unused space
+Fast content switching
 Theme Engine
-Retro terminal styling
-Dynamic theme switching
+Terminal-inspired design
 CSS variable-based system
-Themes:
+Dynamic theme switching
+
+Available themes:
+
 Amber
 Green
 Blue
@@ -84,7 +93,6 @@ tabs
 topSites
 management
 Data Flow
-
 User Action
      |
      v
@@ -100,7 +108,7 @@ chrome.storage.local
 Persistent Data
 Installation
 Open Brave
-Go to: brave://extensions
+Go to brave://extensions
 Enable Developer Mode
-Click "Load unpacked"
-Select project folder
+Click Load unpacked
+Select the project folder

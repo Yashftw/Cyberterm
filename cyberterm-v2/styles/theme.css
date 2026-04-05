@@ -1,0 +1,78 @@
+/* ================================================================
+   CYBERTERM OS — theme.css
+   Theme engine: amber | green | blue
+   Applied via data-ct-theme attribute on <html>
+   ================================================================ */
+
+/* ── AMBER (default) ─────────────────────────────────────────── */
+:root,
+[data-ct-theme="amber"] {
+  --ct-bg:         #1a0f0a;
+  --ct-bg2:        #221308;
+  --ct-bg3:        #2e1a0c;
+  --ct-surf:       #2a1505;
+  --ct-surf2:      #341a08;
+  --ct-bdr:        #7a3d10;
+  --ct-bdr-glow:   #ff9b2f;
+  --ct-acc:        #ff9b2f;
+  --ct-acc2:       #ffb347;
+  --ct-acc3:       #ffd080;
+  --ct-text:       #f5d6a0;
+  --ct-dim:        #a07040;
+  --ct-dim2:       #6b4a25;
+  --ct-bright:     #ffe8b5;
+  --ct-glow:       rgba(255,155,47,0.30);
+  --ct-glow-s:     rgba(255,155,47,0.55);
+  --ct-glow-xs:    rgba(255,155,47,0.12);
+}
+
+/* ── GREEN TERMINAL ──────────────────────────────────────────── */
+[data-ct-theme="green"] {
+  --ct-bg:         #020f04;
+  --ct-bg2:        #041508;
+  --ct-bg3:        #071e0c;
+  --ct-surf:       #051a09;
+  --ct-surf2:      #082010;
+  --ct-bdr:        #1a5e25;
+  --ct-bdr-glow:   #00ff41;
+  --ct-acc:        #00ff41;
+  --ct-acc2:       #39ff6a;
+  --ct-acc3:       #80ffaa;
+  --ct-text:       #c8ffd4;
+  --ct-dim:        #4aaa60;
+  --ct-dim2:       #1e5530;
+  --ct-bright:     #e0ffe8;
+  --ct-glow:       rgba(0,255,65,0.28);
+  --ct-glow-s:     rgba(0,255,65,0.55);
+  --ct-glow-xs:    rgba(0,255,65,0.10);
+}
+
+/* ── BLUE NEON ───────────────────────────────────────────────── */
+[data-ct-theme="blue"] {
+  --ct-bg:         #050a1a;
+  --ct-bg2:        #070e22;
+  --ct-bg3:        #0a1430;
+  --ct-surf:       #080d20;
+  --ct-surf2:      #0c1228;
+  --ct-bdr:        #1a3a7a;
+  --ct-bdr-glow:   #00b4ff;
+  --ct-acc:        #00b4ff;
+  --ct-acc2:       #33c6ff;
+  --ct-acc3:       #80dcff;
+  --ct-text:       #c0e8ff;
+  --ct-dim:        #4080aa;
+  --ct-dim2:       #1a3a5a;
+  --ct-bright:     #e0f4ff;
+  --ct-glow:       rgba(0,180,255,0.28);
+  --ct-glow-s:     rgba(0,180,255,0.55);
+  --ct-glow-xs:    rgba(0,180,255,0.10);
+}
+
+/* ── SHARED FONT/SIZING ──────────────────────────────────────── */
+:root {
+  --ct-font:       'IBM Plex Mono', 'Courier New', 'Lucida Console', monospace;
+  --ct-r:          2px;
+  --ct-ls:         0.04em;
+  --ct-sidebar-w:  260px;
+  --ct-topbar-h:   0px;
+}

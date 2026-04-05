@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CyberTerm OS</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&display=swap');
+
+:root {
+  --bg:   #1a0f0a; --bg2:  #221308; --bg3: #2e1a0c;
+  --surf: #2a1505; --surf2:#341a08; --bdr: #7a3d10;
+  --acc:  #ff9b2f; --acc2: #ffb347; --acc3:#ffd080;
+  --text: #f5d6a0; --dim:  #a07040; --dim2:#6b4a25;
+  --glow: rgba(255,155,47,.32); --glows:rgba(255,155,47,.58);
+  --font: 'IBM Plex Mono','Courier New',monospace;
+}
+[data-theme="green"] {
+  --bg:#020f04;--bg2:#041508;--bg3:#071e0c;--surf:#051a09;
+  --bdr:#1a5e25;--acc:#00ff41;--acc2:#39ff6a;--text:#c8ffd4;
+  --dim:#4aaa60;--glow:rgba(0,255,65,.26);--glows:rgba(0,255,65,.55);
+}
+[data-theme="blue"] {
+  --bg:#050a1a;--bg2:#070e22;--bg3:#0a1430;--surf:#080d20;
+  --bdr:#1a3a7a;--acc:#00b4ff;--acc2:#33c6ff;--text:#c0e8ff;
+  --dim:#4080aa;--glow:rgba(0,180,255,.26);--glows:rgba(0,180,255,.55);
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+body {
+  width:320px; background:var(--bg); color:var(--text);
+  font-family:var(--font); font-size:12px; letter-spacing:.04em;
+  overflow:hidden;
+}
+body::after {
+  content:''; position:fixed; inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.055) 2px,rgba(0,0,0,.055) 4px);
+  pointer-events:none; z-index:999;
+}
+
+/* HEADER */
+.hdr {
+  background:var(--bg2); border-bottom:1px solid var(--bdr);
+  padding:14px 16px 12px; position:relative;
+}
+.hdr::after {
+  content:''; position:absolute; bottom:0;left:0;right:0;height:1px;
+  background:var(--acc); box-shadow:0 0 8px var(--glows); opacity:.45;
+}
+.logo {
+  font-size:15px;font-weight:700;letter-spacing:.14em;color:var(--acc);
+  text-shadow:0 0 10px var(--glows),0 0 24px var(--glow); text-transform:uppercase;
+}
+.logo span {color:var(--dim);}
+.sub {color:var(--dim);font-size:9px;margin-top:3px;letter-spacing:.1em;}
+
+/* MASTER TOGGLE */
+.master {
+  display:flex;align-items:center;justify-content:space-between;
+  padding:13px 16px; border-bottom:1px solid var(--bdr); cursor:pointer;
+}
+.master-lbl {font-size:13px;font-weight:600;color:var(--acc2);letter-spacing:.06em;text-shadow:0 0 5px var(--glow);}
+.master-lbl .stat {font-size:10px;color:var(--dim);font-weight:400;margin-left:8px;}
+
+/* TOGGLE SWITCH */
+.tog { position:relative;width:42px;height:20px;flex-shrink:0; }
+.tog input{opacity:0;width:0;height:0;}
+.tog-sl {
+  position:absolute;inset:0;background:var(--bg3);border:1px solid var(--bdr);
+  border-radius:2px;cursor:pointer;transition:.18s;
+}
+.tog-sl::before {
+  content:'';position:absolute;width:14px;height:14px;
+  left:2px;top:2px;background:var(--dim);transition:.18s;border-radius:1px;
+}
+.tog input:checked + .tog-sl { background:var(--bg2);border-color:var(--acc);box-shadow:0 0 7px var(--glow); }
+.tog input:checked + .tog-sl::before { transform:translateX(21px);background:var(--acc);box-shadow:0 0 6px var(--glows); }
+
+/* SECTIONS */
+.section { border-bottom:1px solid var(--bdr);padding:10px 16px 12px; }
+.sec-title {
+  font-size:9px;letter-spacing:.18em;color:var(--dim);text-transform:uppercase;margin-bottom:10px;
+}
+.sec-title::before {content:'// ';color:var(--acc);}
+
+/* ROWS */
+.row { display:flex;align-items:center;justify-content:space-between;margin-bottom:8px; }
+.row:last-child{margin-bottom:0;}
+.row-lbl {font-size:11px;color:var(--text);letter-spacing:.04em;}
+.row-hint {font-size:9px;color:var(--dim);margin-top:2px;}
+
+/* THEME BUTTONS */
+.theme-row { display:flex;gap:6px; }
+.th-btn {
+  flex:1;padding:8px 4px;background:var(--bg3);border:1px solid var(--bdr);
+  border-radius:2px;color:var(--dim);font-family:var(--font);font-size:10px;
+  letter-spacing:.06em;cursor:pointer;text-align:center;transition:all .13s;text-transform:uppercase;
+}
+.th-btn:hover { border-color:var(--acc2);color:var(--text); }
+.th-btn.active {
+  background:var(--surf);border-color:var(--acc);color:var(--acc);
+  box-shadow:0 0 8px var(--glow);text-shadow:0 0 5px var(--glows);
+}
+
+/* GLOW BUTTONS */
+.glow-row { display:flex;gap:6px; }
+.gl-btn {
+  flex:1;padding:6px 4px;background:var(--bg3);border:1px solid var(--bdr);
+  border-radius:2px;color:var(--dim);font-family:var(--font);font-size:10px;
+  letter-spacing:.06em;cursor:pointer;text-align:center;transition:all .13s;text-transform:uppercase;
+}
+.gl-btn:hover { border-color:var(--acc2);color:var(--text); }
+.gl-btn.active { background:var(--surf);border-color:var(--acc);color:var(--acc);box-shadow:0 0 7px var(--glow); }
+
+/* FOOTER */
+.footer {
+  padding:10px 16px; display:flex;align-items:center;justify-content:space-between;
+}
+.shortcut { color:var(--dim);font-size:10px; }
+.shortcut kbd {
+  background:var(--bg3);border:1px solid var(--bdr);border-radius:2px;
+  padding:1px 4px;font-family:var(--font);font-size:9px;color:var(--acc2);
+}
+.ver { color:var(--dim2);font-size:9px;letter-spacing:.06em; }
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="logo">Cyber<span>T</span>erm <span style="font-size:11px">OS</span></div>
+  <div class="sub">// productivity dashboard engine v2.0</div>
+</div>
+
+<div class="master" id="masterRow">
+  <div>
+    <div class="master-lbl">EXTENSION ACTIVE <span class="stat" id="statusText">ENABLED</span></div>
+  </div>
+  <label class="tog" onclick="event.stopPropagation()">
+    <input type="checkbox" id="togEnabled" checked>
+    <span class="tog-sl"></span>
+  </label>
+</div>
+
+<!-- THEME -->
+<div class="section">
+  <div class="sec-title">Color Theme</div>
+  <div class="theme-row">
+    <button class="th-btn active" data-theme="amber">🟠 Amber</button>
+    <button class="th-btn"        data-theme="green">🟢 Green</button>
+    <button class="th-btn"        data-theme="blue" >🔵 Blue</button>
+  </div>
+</div>
+
+<!-- EFFECTS -->
+<div class="section">
+  <div class="sec-title">Visual Effects</div>
+  <div class="row">
+    <div>
+      <div class="row-lbl">Scanlines</div>
+      <div class="row-hint">CRT line overlay</div>
+    </div>
+    <label class="tog">
+      <input type="checkbox" id="togScanlines" checked>
+      <span class="tog-sl"></span>
+    </label>
+  </div>
+  <div class="row">
+    <div>
+      <div class="row-lbl">CRT Flicker</div>
+      <div class="row-hint">Periodic flicker animation</div>
+    </div>
+    <label class="tog">
+      <input type="checkbox" id="togFlicker">
+      <span class="tog-sl"></span>
+    </label>
+  </div>
+  <div class="row">
+    <div>
+      <div class="row-lbl">Sidebar Panel</div>
+      <div class="row-hint">Show productivity sidebar</div>
+    </div>
+    <label class="tog">
+      <input type="checkbox" id="togSidebar" checked>
+      <span class="tog-sl"></span>
+    </label>
+  </div>
+</div>
+
+<!-- GLOW -->
+<div class="section">
+  <div class="sec-title">Glow Intensity</div>
+  <div class="glow-row">
+    <button class="gl-btn"        data-glow="low">LOW</button>
+    <button class="gl-btn active" data-glow="medium">MED</button>
+    <button class="gl-btn"        data-glow="high">HIGH</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="shortcut">
+    <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Y</kbd> Toggle
+    &nbsp;·&nbsp;
+    <kbd>Ctrl</kbd>+<kbd>J</kbd> Journal
+  </div>
+  <div class="ver">v2.0.0</div>
+</div>
+
+<script src="popup.js"></script>
+</body>
+</html>

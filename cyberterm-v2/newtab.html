@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en" data-ct-theme="amber">
+<head>
+<meta charset="UTF-8">
+<title>CyberTerm OS — New Tab</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
+/* ── THEME VARS ── */
+:root,[data-ct-theme="amber"]{--bg:#1a0f0a;--bg2:#221308;--bg3:#2e1a0c;--surf:#2a1505;--surf2:#341a08;--bdr:#7a3d10;--bdg:#ff9b2f;--acc:#ff9b2f;--acc2:#ffb347;--acc3:#ffd080;--text:#f5d6a0;--dim:#a07040;--dim2:#6b4a25;--bright:#ffe8b5;--glow:rgba(255,155,47,.30);--glows:rgba(255,155,47,.58);--font:'IBM Plex Mono','Courier New',monospace;}
+[data-ct-theme="green"]{--bg:#020f04;--bg2:#041508;--bg3:#071e0c;--surf:#051a09;--surf2:#082010;--bdr:#1a5e25;--bdg:#00ff41;--acc:#00ff41;--acc2:#39ff6a;--acc3:#80ffaa;--text:#c8ffd4;--dim:#4aaa60;--dim2:#1e5530;--bright:#e0ffe8;--glow:rgba(0,255,65,.26);--glows:rgba(0,255,65,.55);}
+[data-ct-theme="blue"]{--bg:#050a1a;--bg2:#070e22;--bg3:#0a1430;--surf:#080d20;--surf2:#0c1228;--bdr:#1a3a7a;--bdg:#00b4ff;--acc:#00b4ff;--acc2:#33c6ff;--acc3:#80dcff;--text:#c0e8ff;--dim:#4080aa;--dim2:#1a3a5a;--bright:#e0f4ff;--glow:rgba(0,180,255,.26);--glows:rgba(0,180,255,.55);}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);font-size:12px;letter-spacing:.04em;overflow:hidden;}
+
+/* scanlines */
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.06) 2px,rgba(0,0,0,.06) 4px);pointer-events:none;z-index:1000;}
+/* vignette */
+body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.55) 100%);pointer-events:none;z-index:999;}
+
+/* ── LAYOUT ── */
+.shell{display:grid;grid-template-columns:220px 1fr 260px;grid-template-rows:52px 1fr 30px;height:100vh;}
+
+/* ── TOPBAR ── */
+.topbar{grid-column:1/-1;background:var(--bg2);border-bottom:1px solid var(--bdr);display:flex;align-items:center;padding:0 20px;gap:18px;position:relative;}
+.topbar::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--acc),transparent);opacity:.45;}
+.t-logo{font-size:16px;font-weight:700;letter-spacing:.14em;color:var(--acc);text-shadow:0 0 12px var(--glows),0 0 28px var(--glow);white-space:nowrap;text-transform:uppercase;}
+.t-logo span{color:var(--dim);}
+
+/* search */
+.search-wrap{flex:1;max-width:460px;position:relative;}
+.search-wrap::before{content:'>';position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--acc);font-size:13px;pointer-events:none;text-shadow:0 0 6px var(--glows);}
+.search{width:100%;background:var(--bg);border:1px solid var(--bdr);border-radius:2px;color:var(--text);font-family:var(--font);font-size:12px;letter-spacing:.04em;padding:7px 12px 7px 28px;outline:none;transition:border-color .15s,box-shadow .15s;}
+.search:focus{border-color:var(--acc);box-shadow:0 0 10px var(--glow);}
+.search::placeholder{color:var(--dim2);}
+
+.t-time{margin-left:auto;text-align:right;}
+.t-clock{font-size:14px;font-weight:600;color:var(--acc2);text-shadow:0 0 6px var(--glow);}
+.t-date{font-size:9px;color:var(--dim);margin-top:1px;letter-spacing:.07em;}
+
+/* theme switcher in topbar */
+.t-themes{display:flex;gap:4px;}
+.t-th{background:none;border:1px solid var(--bdr);border-radius:2px;padding:3px 6px;font-family:var(--font);font-size:10px;color:var(--dim);cursor:pointer;transition:all .12s;}
+.t-th:hover,.t-th.active{border-color:var(--acc);color:var(--acc);box-shadow:0 0 6px var(--glow);}
+
+/* ── SIDEBAR LEFT ── */
+.sb-left{background:var(--bg2);border-right:1px solid var(--bdr);display:flex;flex-direction:column;overflow:hidden;}
+.sb-section{flex-shrink:0;border-bottom:1px solid var(--bdr);}
+.sb-label{font-size:9px;letter-spacing:.18em;color:var(--dim);text-transform:uppercase;padding:8px 14px 5px;}
+.sb-label::before{content:'// ';color:var(--acc);}
+.nav-item{display:flex;align-items:center;gap:8px;padding:7px 14px;color:var(--dim);font-size:11px;cursor:pointer;transition:all .12s;text-decoration:none;position:relative;}
+.nav-item .icon{width:16px;text-align:center;font-size:13px;}
+.nav-item:hover,.nav-item.active{color:var(--acc);background:rgba(255,155,47,.05);text-shadow:0 0 5px var(--glow);}
+.nav-item.active::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--acc);box-shadow:0 0 6px var(--glows);}
+.nav-badge{margin-left:auto;background:var(--acc);color:var(--bg);font-size:9px;font-weight:700;padding:1px 5px;border-radius:1px;box-shadow:0 0 5px var(--glow);}
+
+/* ── MAIN FEED ── */
+.main{overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:9px;}
+.main::-webkit-scrollbar{width:5px;}.main::-webkit-scrollbar-track{background:var(--bg2);}.main::-webkit-scrollbar-thumb{background:var(--bdr);box-shadow:0 0 4px var(--glow);}
+
+.card{background:var(--surf);border:1px solid var(--bdr);border-radius:2px;padding:13px 14px;transition:border-color .14s,box-shadow .14s;cursor:pointer;position:relative;outline:none;}
+.card:hover,.card.focused{border-color:var(--acc);box-shadow:0 0 16px var(--glow),0 2px 20px rgba(0,0,0,.5);}
+.card.focused::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--acc);box-shadow:0 0 8px var(--glows);}
+.c-handle{font-size:11px;font-weight:700;color:var(--acc2);text-shadow:0 0 4px var(--glow);margin-bottom:5px;}
+.c-body{font-size:11px;color:var(--text);line-height:1.58;margin-bottom:8px;}
+.c-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;}
+.c-tag{background:var(--bg3);border:1px solid var(--bdr);color:var(--dim);font-size:9px;padding:2px 6px;border-radius:1px;letter-spacing:.06em;}
+.c-meta{display:flex;gap:12px;align-items:center;font-size:10px;color:var(--dim);}
+.c-meta span{color:var(--acc2);}
+
+/* ── SIDEBAR RIGHT ── */
+.sb-right{background:var(--bg2);border-left:1px solid var(--bdr);display:flex;flex-direction:column;gap:0;overflow-y:auto;}
+.sb-right::-webkit-scrollbar{width:4px;}.sb-right::-webkit-scrollbar-track{background:var(--bg2);}.sb-right::-webkit-scrollbar-thumb{background:var(--bdr);}
+.widget{border-bottom:1px solid var(--bdr);padding:12px 14px;}
+.w-title{font-size:9px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase;margin-bottom:9px;}
+.w-title::before{content:'// ';color:var(--acc);}
+
+/* todo mini */
+.todo-row{display:flex;align-items:center;gap:7px;padding:5px 0;border-bottom:1px solid var(--bg3);font-size:10px;}
+.todo-cb{width:12px;height:12px;border:1px solid var(--bdr);border-radius:1px;flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--acc);font-size:9px;background:var(--bg);transition:all .12s;}
+.todo-cb:hover{border-color:var(--acc);}
+.todo-row.done .todo-text{text-decoration:line-through;color:var(--dim);}
+.todo-row.done .todo-cb{background:var(--acc);color:var(--bg);}
+.todo-text{color:var(--text);flex:1;}
+
+/* stat rows */
+.stat-r{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:10px;}
+.stat-k{color:var(--dim);letter-spacing:.05em;}
+.stat-v{color:var(--acc2);font-weight:600;text-shadow:0 0 4px var(--glow);}
+.stat-bar{height:3px;background:var(--bg3);border-radius:1px;margin-bottom:7px;overflow:hidden;}
+.stat-fill{height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));box-shadow:0 0 5px var(--glow);transition:width 1s ease;}
+
+/* bm mini */
+.bm-row{display:flex;align-items:center;gap:7px;padding:5px 0;font-size:10px;cursor:pointer;text-decoration:none;transition:color .12s;}
+.bm-row:hover .bm-n{color:var(--acc);}
+.bm-i{color:var(--acc);font-size:12px;width:14px;text-align:center;}
+.bm-n{color:var(--text);}
+.bm-d{color:var(--dim);font-size:9px;margin-top:1px;}
+
+/* ── STATUSBAR ── */
+.statusbar{grid-column:1/-1;background:var(--bg2);border-top:1px solid var(--bdr);display:flex;align-items:center;padding:0 14px;gap:14px;font-size:9px;color:var(--dim);letter-spacing:.07em;}
+.sb-k{background:var(--bg3);border:1px solid var(--bdr);padding:0 4px;border-radius:1px;color:var(--acc2);font-size:9px;}
+.sb-sp{flex:1;}
+.sb-cur{color:var(--acc);animation:blink 1.15s step-end infinite;text-shadow:0 0 8px var(--glows);}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="t-logo">Cyber<span>T</span>erm <span style="font-size:10px;letter-spacing:.08em;color:var(--dim)">OS</span></div>
+    <div class="search-wrap">
+      <input class="search" id="searchInput" placeholder="search the web or enter URL...">
+    </div>
+    <div class="t-themes">
+      <button class="t-th active" data-th="amber">🟠</button>
+      <button class="t-th"        data-th="green">🟢</button>
+      <button class="t-th"        data-th="blue">🔵</button>
+    </div>
+    <div class="t-time">
+      <div class="t-clock" id="clock">--:--:--</div>
+      <div class="t-date"  id="date">--- -- ----</div>
+    </div>
+  </header>
+
+  <!-- LEFT SIDEBAR -->
+  <nav class="sb-left">
+    <div class="sb-section">
+      <div class="sb-label">Navigation</div>
+      <div class="nav-item active"><span class="icon">⌘</span>Feed</div>
+      <div class="nav-item"><span class="icon">✓</span>To-Do <span class="nav-badge" id="nt-badge">0</span></div>
+      <div class="nav-item"><span class="icon">✎</span>Journal</div>
+      <div class="nav-item"><span class="icon">◈</span>Bookmarks</div>
+    </div>
+    <div class="sb-section">
+      <div class="sb-label">Comms</div>
+      <a class="nav-item" href="https://discord.com/app" target="_blank"><span class="icon">💬</span>Discord</a>
+      <a class="nav-item" href="https://web.whatsapp.com" target="_blank"><span class="icon">📱</span>WhatsApp</a>
+      <a class="nav-item" href="https://mail.google.com" target="_blank"><span class="icon">◈</span>Gmail</a>
+      <a class="nav-item" href="https://outlook.live.com" target="_blank"><span class="icon">✉</span>Outlook</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-label">Dev</div>
+      <a class="nav-item" href="https://github.com" target="_blank"><span class="icon">⊕</span>GitHub</a>
+      <a class="nav-item" href="https://news.ycombinator.com" target="_blank"><span class="icon">▲</span>HN</a>
+      <a class="nav-item" href="https://lobste.rs" target="_blank"><span class="icon">◉</span>Lobsters</a>
+    </div>
+  </nav>
+
+  <!-- MAIN FEED -->
+  <main class="main" id="feed"></main>
+
+  <!-- RIGHT SIDEBAR -->
+  <aside class="sb-right">
+    <!-- TODOS -->
+    <div class="widget">
+      <div class="w-title">To-Do</div>
+      <div id="nt-todos"></div>
+    </div>
+    <!-- SYSTEM -->
+    <div class="widget">
+      <div class="w-title">System</div>
+      <div class="stat-r"><span class="stat-k">HEAP</span><span class="stat-v" id="nt-heap">--</span></div>
+      <div class="stat-bar"><div class="stat-fill" id="nt-heap-bar" style="width:0%"></div></div>
+      <div class="stat-r"><span class="stat-k">ONLINE</span><span class="stat-v" id="nt-online">--</span></div>
+      <div class="stat-r"><span class="stat-k">HOST</span><span class="stat-v">newtab</span></div>
+    </div>
+    <!-- BOOKMARKS -->
+    <div class="widget">
+      <div class="w-title">Bookmarks</div>
+      <div id="nt-bookmarks"></div>
+    </div>
+  </aside>
+
+  <!-- STATUSBAR -->
+  <footer class="statusbar">
+    <span class="sb-cur">█</span>
+    <span><span class="sb-k">↑↓</span> Navigate</span>
+    <span><span class="sb-k">Enter</span> Open</span>
+    <span><span class="sb-k">/</span> Search</span>
+    <span><span class="sb-k">?</span> Help</span>
+    <span class="sb-sp"></span>
+    <span id="sb-info" style="color:var(--dim)">CyberTerm OS v2.0</span>
+  </footer>
+</div>
+
+<script>
+// ── THEME ──────────────────────────────────────────────────
+const html = document.documentElement;
+function loadTheme() {
+  chrome.storage.local.get('ct_theme', d => {
+    setTheme(d.ct_theme || 'amber');
+  });
+}
+function setTheme(t) {
+  html.setAttribute('data-ct-theme', t);
+  document.querySelectorAll('.t-th').forEach(b => b.classList.toggle('active', b.dataset.th===t));
+  chrome.storage.local.set({ ct_theme: t });
+}
+document.querySelectorAll('.t-th').forEach(btn => {
+  btn.addEventListener('click', () => setTheme(btn.dataset.th));
+});
+loadTheme();
+
+// ── CLOCK ──────────────────────────────────────────────────
+function tick() {
+  const now = new Date();
+  const days=['SUN','MON','TUE','WED','THU','FRI','SAT'];
+  const months=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  document.getElementById('clock').textContent = [now.getHours(),now.getMinutes(),now.getSeconds()].map(n=>String(n).padStart(2,'0')).join(':');
+  document.getElementById('date').textContent  = `${days[now.getDay()]} ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+}
+tick(); setInterval(tick,1000);
+
+// ── SEARCH ─────────────────────────────────────────────────
+const si = document.getElementById('searchInput');
+si.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  const q = si.value.trim();
+  if (!q) return;
+  try { window.location.href = new URL(q.includes('.')?'https://'+q.replace(/^https?:\/\//,''):q).href; }
+  catch { window.location.href = `https://www.google.com/search?q=${encodeURIComponent(q)}`; }
+});
+
+// ── FEED ───────────────────────────────────────────────────
+const FEED=[
+  {handle:'@genghis_khan',body:'V2.0 shipped: full sidebar, todo, journal, bookmarks, comms, system panel. Productivity dashboard mode.',tags:['#update','#cyberterm'],time:'12m ago',r:9,s:4},
+  {handle:'@null_pointer', body:'Just shipped a bash util that watches git blame and reports which lines you wrote that got deleted. Mine: comments.',tags:['#code','#tools'],time:'2h ago',r:14,s:7},
+  {handle:'@phosphor',     body:'Amber on black. The original dark mode. Everything since has been an imitation of warmth.',tags:['#thoughts'],time:'5h ago',r:3,s:11},
+  {handle:'@wren_bytes',   body:'Write the ugly draft first — the one where you say exactly what you mean with zero elegance. Then rewrite.',tags:['#writing'],time:'1d ago',r:22,s:15},
+  {handle:'@cascade_sys',  body:'BGP flap resolved. p99 thresholds updated. All systems nominal. RCA pending.',tags:['#ops','#infra'],time:'2d ago',r:6,s:2},
+];
+let fi=0;
+const feed = document.getElementById('feed');
+feed.innerHTML = FEED.map((p,i)=>`
+  <div class="card${i===0?' focused':''}" tabindex="0" data-i="${i}">
+    <div class="c-handle">${p.handle}</div>
+    <div class="c-body">${p.body}</div>
+    <div class="c-tags">${p.tags.map(t=>`<span class="c-tag">${t}</span>`).join('')}</div>
+    <div class="c-meta">${p.time} · ↩ <span>${p.r}</span> · ★ <span>${p.s}</span></div>
+  </div>
+`).join('');
+const cards = Array.from(feed.querySelectorAll('.card'));
+function focusCard(i){
+  fi=Math.max(0,Math.min(i,cards.length-1));
+  cards.forEach((c,j)=>c.classList.toggle('focused',j===fi));
+  cards[fi].scrollIntoView({block:'nearest',behavior:'smooth'});
+  document.getElementById('sb-info').textContent=FEED[fi].handle;
+}
+cards.forEach((c,i)=>c.addEventListener('click',()=>focusCard(i)));
+
+// ── TODOS ──────────────────────────────────────────────────
+function loadTodos(){
+  chrome.storage.local.get('ct_todos',d=>{
+    const todos=(d.ct_todos||[]).slice(0,8);
+    const pending=todos.filter(t=>!t.done).length;
+    document.getElementById('nt-badge').textContent=pending;
+    document.getElementById('nt-todos').innerHTML=todos.length===0?
+      '<div style="color:var(--dim);font-size:10px;padding:4px 0">No tasks. Add via sidebar.</div>':
+      todos.map((t,i)=>`
+        <div class="todo-row${t.done?' done':''}" data-i="${i}">
+          <div class="todo-cb" data-ci="${i}">${t.done?'✓':''}</div>
+          <div class="todo-text">${esc(t.text)}</div>
+        </div>
+      `).join('');
+    document.getElementById('nt-todos').addEventListener('click',e=>{
+      const cb=e.target.closest('[data-ci]');
+      if(!cb)return;
+      const all=d.ct_todos||[];
+      const idx=+cb.dataset.ci;
+      if(all[idx]){all[idx].done=!all[idx].done; chrome.storage.local.set({ct_todos:all},loadTodos);}
+    });
+  });
+}
+loadTodos();
+
+// ── BOOKMARKS ──────────────────────────────────────────────
+function loadBookmarks(){
+  chrome.storage.local.get('ct_bookmarks',d=>{
+    const bms=(d.ct_bookmarks||[]).slice(0,6);
+    document.getElementById('nt-bookmarks').innerHTML=bms.length===0?
+      '<div style="color:var(--dim);font-size:10px;">No bookmarks yet.</div>':
+      bms.map(b=>`
+        <a class="bm-row" href="${esc(b.url)}" target="_blank">
+          <span class="bm-i">◈</span>
+          <div>
+            <div class="bm-n">${esc((b.title||b.url).slice(0,26))}</div>
+            <div class="bm-d">${shortUrl(b.url)}</div>
+          </div>
+        </a>
+      `).join('');
+  });
+}
+loadBookmarks();
+
+// ── SYSTEM ─────────────────────────────────────────────────
+function updateSys(){
+  if(performance.memory){
+    const u=(performance.memory.usedJSHeapSize/1048576).toFixed(1);
+    const pct=Math.round(performance.memory.usedJSHeapSize/performance.memory.jsHeapSizeLimit*100);
+    document.getElementById('nt-heap').textContent=u+' MB';
+    document.getElementById('nt-heap-bar').style.width=pct+'%';
+  }
+  document.getElementById('nt-online').textContent=navigator.onLine?'● ONLINE':'○ OFFLINE';
+}
+updateSys(); setInterval(updateSys,4000);
+
+// ── KEYBOARD ───────────────────────────────────────────────
+document.addEventListener('keydown',e=>{
+  if(document.activeElement===si){
+    if(e.key==='Escape')si.blur();
+    return;
+  }
+  if(e.key==='/'){ e.preventDefault(); si.focus(); }
+  if(e.key==='ArrowDown'||e.key==='j'){e.preventDefault();focusCard(fi+1);}
+  if(e.key==='ArrowUp'  ||e.key==='k'){e.preventDefault();focusCard(fi-1);}
+});
+
+// ── UTIL ───────────────────────────────────────────────────
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function shortUrl(u){try{return new URL(u).hostname;}catch{return u;}}
+</script>
+</body>
+</html>

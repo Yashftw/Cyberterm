@@ -20,31 +20,7 @@ You get:
 
 ---
 
-## Architecture
 
-
-+-----------------------+
-| Brave Browser |
-+----------+------------+
-|
-v
-+-----------------------+
-| Extension Layer |
-| UI + Logic Engine |
-+----------+------------+
-|
-v
-+-----------------------+
-| Modules |
-| - Search |
-| - To-Do |
-| - Journal |
-| - AI Hub |
-| - System Monitor |
-+-----------------------+
-
-
----
 
 ## Core Features
 
